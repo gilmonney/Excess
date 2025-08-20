@@ -1,0 +1,47 @@
+
+
+<!DOCTYPE html>
+
+<html lang="en" data-page="contact">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Excess Music • Contact</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="nav">
+    <a class="brand" href="/">Excess Music</a>
+    <nav>
+      <a href="/ngo.html">NGO</a>
+      <a href="/artists.html">Artists</a>
+      <a class="active" href="/contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <main class="two-col">
+    <canvas id="scene"></canvas>
+    <section class="content">
+      <h1>Contact</h1>
+      <form class="form" action="https://formspree.io/f/your-id" method="POST">
+        <label>
+          Name
+          <input name="name" required>
+        </label>
+        <label>
+          Email
+          <input type="email" name="email" required>
+        </label>
+        <label>
+          Message
+          <textarea name="message" rows="5" required></textarea>
+        </label>
+        <button type="submit">Send</button>
+      </form>
+    </section>
+  </main>
+
+  <script type="module" src="/script.js"></script>
+
+</body>
+</html>
