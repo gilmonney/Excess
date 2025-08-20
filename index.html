@@ -1,100 +1,160 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Excess Music Intro</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Excess Music</title>
   <style>
-    body, html {
-      margin: 0;
-      padding: 0;
-      height: 100vh;
-      overflow: hidden;
-      background: black;
+    /* Reset */
+    * {margin:0; padding:0; box-sizing:border-box;}
+    body, html {width:100%; height:100%; font-family:Arial, sans-serif; background:#000; color:white; overflow:hidden;}
+
+    /* Canvas background */
+    #bg-canvas {
+      position:fixed;
+      top:0; left:0;
+      width:100%; height:100%;
+      z-index:-1;
     }
 
-    /* Put iframe as full background */
-    #bg-frame {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      border: none;
-      z-index: -1;
+    /* Centered Logo */
+    .logo-container {
+      position:absolute;
+      top:50%;
+      left:50%;
+      transform:translate(-50%, -50%);
+      text-align:center;
+      z-index:10;
     }
 
-    /* Overlay text */
-    #intro {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      text-align: center;
-      color: white;
-      font-family: Arial, sans-serif;
-      font-size: 2em;
-      opacity: 0;
-      transition: opacity 1s ease-in-out;
+    .logo-container img {
+      width:200px;
+      height:auto;
+      margin-bottom:20px;
     }
 
-    #intro img {
-      width: 120px;
-      display: block;
-      margin: 0 auto 20px;
+    /* 3D Text */
+    .moving-text {
+      font-size:2rem;
+      font-weight:bold;
+      color:#fff;
+      text-shadow:0 0 20px rgba(255,255,255,0.8);
+      animation: floatText 6s infinite ease-in-out alternate;
     }
 
-    #intro.show {
-      opacity: 1;
+    @keyframes floatText {
+      0% { transform: translateY(-20px) rotateX(0deg) rotateY(0deg);}
+      50% { transform: translateY(20px) rotateX(20deg) rotateY(20deg);}
+      100% { transform: translateY(-20px) rotateX(0deg) rotateY(0deg);}
     }
 
-    #intro.hide {
-      opacity: 0;
+    /* Button Container */
+    .button-container {
+      display:flex;
+      gap:30px;
+      justify-content:center;
+      margin-top:40px;
+    }
+
+    /* 3D Glass Buttons */
+    .btn-3d {
+      position:relative;
+      padding:15px 40px;
+      border:none;
+      font-size:1rem;
+      font-weight:bold;
+      color:white;
+      background:rgba(255,255,255,0.1);
+      border-radius:12px;
+      backdrop-filter:blur(10px);
+      box-shadow:0 10px 20px rgba(0,0,0,0.5), inset 0 1px 2px rgba(255,255,255,0.3);
+      transition:all 0.3s ease;
+      cursor:pointer;
+    }
+
+    .btn-3d:hover {
+      transform:translateY(-5px) scale(1.05);
+      box-shadow:0 15px 30px rgba(0,0,0,0.7), inset 0 2px 4px rgba(255,255,255,0.5);
+    }
+
+    .btn-3d:active {
+      transform:translateY(2px) scale(0.98);
+      box-shadow:0 5px 15px rgba(0,0,0,0.7);
+    }
+
+    /* Footer */
+    footer {
+      position:absolute;
+      bottom:20px;
+      width:100%;
+      text-align:center;
+      font-size:0.8rem;
+      color:#aaa;
     }
   </style>
 </head>
 <body>
-  <!-- 3D cube background -->
-  <iframe id="bg-frame" src="1bg.html"></iframe>
+  <!-- Background Canvas -->
+  <canvas id="bg-canvas"></canvas>
 
-  <!-- Intro overlay -->
-  <div id="intro">
-    <img src="ExcessLogo.jpg" alt="Excess Logo">
-    <div id="intro-text">Welcome to Excess Music</div>
+  <!-- Centered Logo and Text -->
+  <div class="logo-container">
+    <img src="ExcessLogo.jpg" alt="Excess Logo" />
+    <div class="moving-text">Excess Music</div>
+
+    <!-- 3D Buttons -->
+    <div class="button-container">
+      <button class="btn-3d">Home</button>
+      <button class="btn-3d">Artists</button>
+      <button class="btn-3d">Releases</button>
+      <button class="btn-3d">Contact</button>
+    </div>
   </div>
 
-  <script>
-    const intro = document.getElementById("intro");
-    const introText = document.getElementById("intro-text");
+  <footer>
+    © 2025 Excess Music. All rights reserved.
+  </footer>
 
-    // Step 1: Show Welcome
-    setTimeout(() => {
-      intro.classList.add("show");
-    }, 500);
+  <!-- Three.js Background -->
+  <script type="module">
+    import * as THREE from 'https://unpkg.com/three@0.179.0/build/three.module.js';
 
-    // Step 2: Hide Welcome
-    setTimeout(() => {
-      intro.classList.remove("show");
-      intro.classList.add("hide");
-    }, 4000);
+    // Scene setup
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+    camera.position.z = 5;
 
-    // Step 3: Swap text to Bridging the Gap
-    setTimeout(() => {
-      introText.textContent = "Bridging the gap between culture and sound";
-      intro.classList.remove("hide");
-      intro.classList.add("show");
-    }, 5000);
+    const renderer = new THREE.WebGLRenderer({canvas:document.getElementById('bg-canvas'), antialias:true});
+    renderer.setSize(window.innerWidth, window.innerHeight);
 
-    // Step 4: Hide Bridging the Gap
-    setTimeout(() => {
-      intro.classList.remove("show");
-      intro.classList.add("hide");
-    }, 9000);
+    // Geometry & Material for background particles
+    const particlesCount = 2000;
+    const positions = new Float32Array(particlesCount * 3);
+    for (let i=0; i<particlesCount*3; i++) {
+      positions[i] = (Math.random() - 0.5) * 20;
+    }
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
 
-    // Step 5: Replace with main site (placeholder)
-    setTimeout(() => {
-      document.body.innerHTML = "<h1 style='color:white;text-align:center;'>Main Website Content</h1>";
-    }, 10000);
+    const material = new THREE.PointsMaterial({color:0xffffff, size:0.02});
+    const points = new THREE.Points(geometry, material);
+    scene.add(points);
+
+    // Animation
+    function animate() {
+      requestAnimationFrame(animate);
+      points.rotation.y += 0.0015;
+      points.rotation.x += 0.0007;
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    // Resize
+    window.addEventListener('resize', ()=>{
+      camera.aspect = window.innerWidth/window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
   </script>
 </body>
 </html>
