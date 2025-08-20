@@ -58,6 +58,8 @@
 
     // Scene setup
     const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x000000);
+
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
     camera.position.z = 5;
 
@@ -69,39 +71,44 @@
     const pointLight = new THREE.PointLight(0xffffff, 1);
     pointLight.position.set(5,5,5);
     scene.add(pointLight);
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
     scene.add(ambientLight);
 
-    // Load Logo Texture
+    // Load Logo Texture with error handling
     const textureLoader = new THREE.TextureLoader();
-    const logoTexture = textureLoader.load("ExcessLogo.jpg");
+    const logoTexture = textureLoader.load(
+      "ExcessLogo.jpg",
+      () => console.log("Logo loaded"),
+      undefined,
+      (err) => console.error("Error loading logo", err)
+    );
 
-    // Cube (Logo Box)
+    // Cube (logo box)
     const cubeGeometry = new THREE.BoxGeometry(2,2,2);
     const cubeMaterial = new THREE.MeshStandardMaterial({ map: logoTexture });
     const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
     scene.add(cube);
 
-    // Stars background
+    // Background stars
     function addStar() {
       const geometry = new THREE.SphereGeometry(0.1, 24, 24);
       const material = new THREE.MeshStandardMaterial({ color: 0xffffff });
       const star = new THREE.Mesh(geometry, material);
-
       const [x, y, z] = Array(3).fill().map(() => THREE.MathUtils.randFloatSpread(100));
       star.position.set(x, y, z);
       scene.add(star);
     }
-    Array(500).fill().forEach(addStar);
+    Array(400).fill().forEach(addStar);
 
-    // Controls (for debug or exploration)
+    // Controls (optional, for debugging)
     const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableZoom = false;
 
     // Animation loop
     function animate() {
       requestAnimationFrame(animate);
-      cube.rotation.x += 0.005;
-      cube.rotation.y += 0.005;
+      cube.rotation.x += 0.01;
+      cube.rotation.y += 0.01;
       controls.update();
       renderer.render(scene, camera);
     }
@@ -144,7 +151,7 @@
       duration: 3
     });
 
-    // Resize handling
+    // Handle resize
     window.addEventListener("resize", () => {
       camera.aspect = window.innerWidth/window.innerHeight;
       camera.updateProjectionMatrix();
