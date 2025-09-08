@@ -91,8 +91,61 @@
       bottom:20px;
       width:100%;
       text-align:center;
-      font-size:0.8rem;
+      font-size:clamp(0.7rem, 2.5vw, 0.8rem);
       color:#aaa;
+      padding:0 20px;
+    }
+
+    /* Mobile Specific Adjustments */
+    @media (max-width: 768px) {
+      .logo-container {
+        padding:20px;
+      }
+      
+      .button-container {
+        flex-direction:column;
+        align-items:center;
+        gap:15px;
+        max-width:280px;
+        margin:30px auto 0;
+      }
+      
+      .btn-3d {
+        width:100%;
+        max-width:200px;
+        text-align:center;
+      }
+      
+      .btn-3d:hover {
+        transform:translateY(-2px) scale(1.02);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .logo-container img {
+        width:min(150px, 50vw);
+        margin-bottom:15px;
+      }
+      
+      .moving-text {
+        font-size:clamp(1.2rem, 6vw, 1.5rem);
+      }
+      
+      .button-container {
+        margin-top:20px;
+      }
+    }
+
+    /* Touch device optimizations */
+    @media (hover: none) and (pointer: coarse) {
+      .btn-3d:hover {
+        transform:none;
+        box-shadow:0 10px 20px rgba(0,0,0,0.5), inset 0 1px 2px rgba(255,255,255,0.3);
+      }
+      
+      .btn-3d:active {
+        transform:scale(0.95);
+      }
     }
   </style>
 </head>
@@ -107,10 +160,10 @@
 
     <!-- 3D Buttons -->
     <div class="button-container">
-      <button class="btn-3d">Home</button>
-      <button class="btn-3d">Artists</button>
-      <button class="btn-3d">Releases</button>
-      <button class="btn-3d">Contact</button>
+      <button class="btn-3d" onclick="window.location.href='index.html'">Home</button>
+      <button class="btn-3d" onclick="window.location.href='artists.html'">Artists</button>
+      <button class="btn-3d" onclick="window.location.href='ngo.html'">NGO</button>
+      <button class="btn-3d" onclick="window.location.href='contact.html'">Contact</button>
     </div>
   </div>
 
@@ -130,8 +183,9 @@
     const renderer = new THREE.WebGLRenderer({canvas:document.getElementById('bg-canvas'), antialias:true});
     renderer.setSize(window.innerWidth, window.innerHeight);
 
-    // Geometry & Material for background particles
-    const particlesCount = 2000;
+    // Geometry & Material for background particles with mobile optimization
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    const particlesCount = isMobile ? 800 : 2000; // Reduce particles on mobile
     const positions = new Float32Array(particlesCount * 3);
     for (let i=0; i<particlesCount*3; i++) {
       positions[i] = (Math.random() - 0.5) * 20;
@@ -139,9 +193,15 @@
     const geometry = new THREE.BufferGeometry();
     geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
 
-    const material = new THREE.PointsMaterial({color:0xffffff, size:0.02});
+    const material = new THREE.PointsMaterial({color:0xffffff, size:isMobile ? 0.03 : 0.02});
     const points = new THREE.Points(geometry, material);
     scene.add(points);
+
+    // Touch optimization for mobile
+    if (isMobile) {
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      document.body.style.touchAction = 'manipulation';
+    }
 
     // Animation
     function animate() {

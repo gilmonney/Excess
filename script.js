@@ -24,9 +24,21 @@ renderer.setSize(window\.innerWidth, window\.innerHeight);
 renderer.setPixelRatio(Math.min(window\.devicePixelRatio, 2));
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 
-// Controls
+// Controls with mobile optimization
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
+controls.dampingFactor = 0.05;
+
+// Mobile touch optimizations
+const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+if (isMobile) {
+  controls.enableZoom = false;
+  controls.enablePan = false;
+  controls.autoRotate = true;
+  controls.autoRotateSpeed = 0.5;
+  controls.maxPolarAngle = Math.PI * 0.75;
+  controls.minPolarAngle = Math.PI * 0.25;
+}
 
 // Lights
 const ambient = new THREE.AmbientLight(0xffffff, 0.35);
@@ -44,9 +56,9 @@ composer.addPass(new RenderPass(scene, camera));
 const bloom = new UnrealBloomPass(new THREE.Vector2(window\.innerWidth, window\.innerHeight), 0.9, 0.4, 0.85);
 composer.addPass(bloom);
 
-// Particles background
+// Particles background with mobile optimization
 const starGeom = new THREE.BufferGeometry();
-const starCount = 900;
+const starCount = isMobile ? 400 : 900; // Reduce particles on mobile for better performance
 const starPos = new Float32Array(starCount \* 3);
 for (let i = 0; i < starCount \* 3; i += 3) {
 starPos\[i] = (Math.random() - 0.5) \* 120;
