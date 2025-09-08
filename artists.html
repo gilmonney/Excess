@@ -5,6 +5,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Excess Music • Artists</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
@@ -19,26 +22,55 @@
 
   <main class="grid-page">
     <canvas id="scene"></canvas>
-    <section class="grid content">
-      <article class="card">
-        <h3>SelfMade</h3>
-        <p>Trap soul, luxury narratives, layered wordplay.</p>
-      </article>
-      <article class="card">
-        <h3>Dolores</h3>
-        <p>Experimental, cinematic, widescreen hooks.</p>
-      </article>
-      <article class="card">
-        <h3>XX Collective</h3>
-        <p>Producers and writers from Accra to Dallas.</p>
-      </article>
-      <article class="card">
-        <h3>New Signings</h3>
-        <p>Open submissions. Bring heat.</p>
-      </article>
+    
+    <!-- Search and Filter Section -->
+    <section class="filters">
+      <div class="search-container">
+        <input type="text" id="artist-search" placeholder="Search artists..." class="search-input">
+        <button id="clear-search" class="clear-btn" style="display: none;">×</button>
+      </div>
+      <div class="filter-controls">
+        <select id="genre-filter" class="filter-select">
+          <option value="">All Genres</option>
+          <option value="electronic">Electronic</option>
+          <option value="techno">Techno</option>
+          <option value="house">House</option>
+          <option value="ambient">Ambient</option>
+          <option value="experimental">Experimental</option>
+          <option value="drum-and-bass">Drum & Bass</option>
+          <option value="dubstep">Dubstep</option>
+          <option value="trance">Trance</option>
+        </select>
+        <select id="sort-filter" class="filter-select">
+          <option value="-createdAt">Newest First</option>
+          <option value="createdAt">Oldest First</option>
+          <option value="name">Name A-Z</option>
+          <option value="-name">Name Z-A</option>
+          <option value="-totalPlays">Most Plays</option>
+          <option value="-totalReleases">Most Releases</option>
+        </select>
+        <button id="featured-toggle" class="filter-btn">Featured Only</button>
+      </div>
+    </section>
+
+    <!-- Artists Grid -->
+    <section class="grid content" id="artists-grid">
+      <div class="loading">
+        <div class="loading-spinner"></div>
+        <span>Loading artists...</span>
+      </div>
+    </section>
+
+    <!-- Pagination -->
+    <section class="pagination" id="pagination" style="display: none;">
+      <button id="prev-page" class="btn-secondary">Previous</button>
+      <span id="page-info">Page 1 of 1</span>
+      <button id="next-page" class="btn-secondary">Next</button>
     </section>
   </main>
 
+  <script type="module" src="/js/api.js"></script>
+  <script type="module" src="/js/artists.js"></script>
   <script type="module" src="/script.js"></script>
 
 </body>

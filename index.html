@@ -4,10 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>Excess Music</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     /* Reset */
     * {margin:0; padding:0; box-sizing:border-box;}
-    body, html {width:100%; height:100%; font-family:Arial, sans-serif; background:#000; color:white; overflow:hidden;}
+    body, html {width:100%; height:100%; font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background:#000; color:white; overflow:hidden;}
 
     /* Canvas background */
     #bg-canvas {
@@ -165,6 +168,25 @@
       <button class="btn-3d" onclick="window.location.href='ngo.html'">NGO</button>
       <button class="btn-3d" onclick="window.location.href='contact.html'">Contact</button>
     </div>
+    
+    <!-- Featured Content -->
+    <div class="featured-content" id="featured-content" style="display: none;">
+      <div class="featured-section">
+        <h3>Featured Artists</h3>
+        <div class="featured-grid" id="featured-artists">
+          <div class="loading-small">Loading...</div>
+        </div>
+      </div>
+      
+      <div class="featured-section">
+        <h3>Latest Releases</h3>
+        <div class="featured-grid" id="latest-releases">
+          <div class="loading-small">Loading...</div>
+        </div>
+      </div>
+    </div>
+    
+    <button class="explore-btn" id="explore-toggle">Explore Music</button>
   </div>
 
   <footer>
