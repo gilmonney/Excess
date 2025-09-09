@@ -34,30 +34,40 @@ router.get('/', async (req, res) => {
       query.$text = { $search: search };
     }
 
-    const options = {
-      page: parseInt(page),
-      limit: parseInt(limit),
-      sort,
-      populate: {
+    const artists = await Artist.find(query)
+      .populate({
         path: 'releases',
         match: { published: true },
         select: 'title artwork releaseDate totalPlays',
         options: { sort: { releaseDate: -1 }, limit: 5 }
-      }
-    };
+      })
+      .sort(sort)
+      .limit(parseInt(limit))
+      .skip((parseInt(page) - 1) * parseInt(limit));
 
-    const artists = await Artist.paginate(query, options);
+    const total = await Artist.countDocuments(query);
+    const totalPages = Math.ceil(total / parseInt(limit));
+
+    const paginationData = {
+      docs: artists,
+      page: parseInt(page),
+      totalPages,
+      totalDocs: total,
+      limit: parseInt(limit),
+      hasNextPage: parseInt(page) < totalPages,
+      hasPrevPage: parseInt(page) > 1
+    };
     
     res.json({
       success: true,
-      data: artists.docs,
+      data: paginationData.docs,
       pagination: {
-        page: artists.page,
-        pages: artists.totalPages,
-        total: artists.totalDocs,
-        limit: artists.limit,
-        hasNext: artists.hasNextPage,
-        hasPrev: artists.hasPrevPage
+        page: paginationData.page,
+        pages: paginationData.totalPages,
+        total: paginationData.totalDocs,
+        limit: paginationData.limit,
+        hasNext: paginationData.hasNextPage,
+        hasPrev: paginationData.hasPrevPage
       }
     });
   } catch (error) {

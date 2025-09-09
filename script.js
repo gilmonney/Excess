@@ -15,6 +15,8 @@ const CANVAS = document.getElementById("scene");
 // Common scene setup
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x000000);
+// Make scene globally accessible for theme manager
+window.scene = scene;
 
 const camera = new THREE.PerspectiveCamera(70, window\.innerWidth / window\.innerHeight, 0.1, 2000);
 camera.position.set(0, 1.5, 6);
@@ -67,6 +69,8 @@ starPos\[i + 2] = (Math.random() - 0.5) \* 120;
 }
 starGeom.setAttribute("position", new THREE.Float32BufferAttribute(starPos, 3));
 const stars = new THREE.Points(starGeom, new THREE.PointsMaterial({ size: 0.7, color: 0xffffff }));
+// Make stars globally accessible for theme manager
+window.stars = stars;
 scene.add(stars);
 
 // Responsive

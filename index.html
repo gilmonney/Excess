@@ -10,7 +10,22 @@
   <style>
     /* Reset */
     * {margin:0; padding:0; box-sizing:border-box;}
-    body, html {width:100%; height:100%; font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background:#000; color:white; overflow:hidden;}
+    body, html {width:100%; height:100%; font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background:var(--bg); color:var(--fg); overflow:hidden;}
+    
+    /* Theme variables */
+    :root {
+      --bg: #000;
+      --fg: #fff;
+      --glass-bg: rgba(255,255,255,0.1);
+      --glass-border: rgba(255,255,255,0.3);
+    }
+    
+    [data-theme="light"] {
+      --bg: #ffffff;
+      --fg: #1a1a1a;
+      --glass-bg: rgba(0,0,0,0.1);
+      --glass-border: rgba(0,0,0,0.3);
+    }
 
     /* Canvas background */
     #bg-canvas {
@@ -40,9 +55,13 @@
     .moving-text {
       font-size:clamp(1.5rem, 5vw, 2rem);
       font-weight:bold;
-      color:#fff;
+      color:var(--fg);
       text-shadow:0 0 20px rgba(255,255,255,0.8);
       animation: floatText 6s infinite ease-in-out alternate;
+    }
+    
+    [data-theme="light"] .moving-text {
+      text-shadow:0 0 20px rgba(0,0,0,0.3);
     }
 
     @keyframes floatText {
@@ -68,19 +87,27 @@
       border:none;
       font-size:clamp(0.85rem, 3.5vw, 1rem);
       font-weight:bold;
-      color:white;
-      background:rgba(255,255,255,0.1);
+      color:var(--fg);
+      background:var(--glass-bg);
       border-radius:12px;
       backdrop-filter:blur(10px);
-      box-shadow:0 10px 20px rgba(0,0,0,0.5), inset 0 1px 2px rgba(255,255,255,0.3);
+      box-shadow:0 10px 20px rgba(0,0,0,0.5), inset 0 1px 2px var(--glass-border);
       transition:all 0.3s ease;
       cursor:pointer;
       white-space:nowrap;
     }
+    
+    [data-theme="light"] .btn-3d {
+      box-shadow:0 10px 20px rgba(0,0,0,0.1), inset 0 1px 2px var(--glass-border);
+    }
 
     .btn-3d:hover {
       transform:translateY(-5px) scale(1.05);
-      box-shadow:0 15px 30px rgba(0,0,0,0.7), inset 0 2px 4px rgba(255,255,255,0.5);
+      box-shadow:0 15px 30px rgba(0,0,0,0.7), inset 0 2px 4px var(--glass-border);
+    }
+    
+    [data-theme="light"] .btn-3d:hover {
+      box-shadow:0 15px 30px rgba(0,0,0,0.2), inset 0 2px 4px var(--glass-border);
     }
 
     .btn-3d:active {
@@ -150,6 +177,140 @@
         transform:scale(0.95);
       }
     }
+
+    /* Featured content styles */
+    .featured-content {
+      margin-top: 40px;
+      max-width: 800px;
+      width: 100%;
+    }
+
+    .featured-section {
+      margin-bottom: 30px;
+    }
+
+    .featured-section h3 {
+      color: white;
+      font-size: 1.2rem;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    .featured-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 15px;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .featured-item {
+      background: var(--glass-bg);
+      border-radius: 8px;
+      padding: 10px;
+      text-align: center;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .featured-item:hover {
+      background: rgba(255,255,255,0.2);
+      transform: translateY(-2px);
+    }
+    
+    [data-theme="light"] .featured-item:hover {
+      background: rgba(0,0,0,0.2);
+    }
+
+    .featured-item img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 8px;
+    }
+
+    .featured-item h4 {
+      color: var(--fg);
+      font-size: 0.9rem;
+      margin: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .featured-item p {
+      color: #ccc;
+      font-size: 0.7rem;
+      margin: 4px 0 0 0;
+    }
+
+    .explore-btn {
+      margin-top: 20px;
+      padding: 12px 30px;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      color: var(--fg);
+      border-radius: 25px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+
+    .explore-btn:hover {
+      background: rgba(255,255,255,0.2);
+      transform: translateY(-2px);
+    }
+    
+    [data-theme="light"] .explore-btn:hover {
+      background: rgba(0,0,0,0.2);
+    }
+    
+    /* Theme toggle for index page */
+    .theme-toggle {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 8px;
+      color: var(--fg);
+      cursor: pointer;
+      padding: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+      width: 36px;
+      height: 36px;
+      margin: 0 auto;
+      margin-top: 20px;
+    }
+
+    .theme-toggle:hover {
+      background: rgba(255,255,255,0.2);
+      transform: translateY(-1px);
+    }
+    
+    [data-theme="light"] .theme-toggle:hover {
+      background: rgba(0,0,0,0.2);
+    }
+
+    .theme-toggle:active {
+      transform: translateY(0);
+    }
+
+    .theme-toggle .theme-icon {
+      width: 18px;
+      height: 18px;
+      transition: all 0.3s ease;
+    }
+
+    .loading-small {
+      color: #ccc;
+      text-align: center;
+      padding: 20px;
+      font-size: 0.9rem;
+    }
   </style>
 </head>
 <body>
@@ -193,12 +354,22 @@
     © 2025 Excess Music. All rights reserved.
   </footer>
 
+  <!-- Theme Management -->
+  <script type="module" src="/js/theme.js"></script>
+  
+  <!-- API and Homepage Scripts -->
+  <script type="module" src="/js/api.js"></script>
+  <script type="module" src="/js/homepage.js"></script>
+  
   <!-- Three.js Background -->
   <script type="module">
     import * as THREE from 'https://unpkg.com/three@0.179.0/build/three.module.js';
 
     // Scene setup
     const scene = new THREE.Scene();
+    // Make scene globally accessible for theme manager
+    window.scene = scene;
+    
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
     camera.position.z = 5;
 
@@ -217,6 +388,8 @@
 
     const material = new THREE.PointsMaterial({color:0xffffff, size:isMobile ? 0.03 : 0.02});
     const points = new THREE.Points(geometry, material);
+    // Make points globally accessible for theme manager
+    window.stars = points;
     scene.add(points);
 
     // Touch optimization for mobile

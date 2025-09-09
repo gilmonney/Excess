@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Excess Music - Admin Panel</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #0a0a0a;
+      color: #fff;
+      line-height: 1.6;
+    }
+
+    .admin-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .admin-header {
+      background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .admin-header h1 {
+      color: #fff;
+      margin-bottom: 10px;
+    }
+
+    .admin-header p {
+      color: #ccc;
+    }
+
+    .login-form {
+      max-width: 400px;
+      margin: 100px auto;
+      background: rgba(255,255,255,0.05);
+      padding: 40px;
+      border-radius: 12px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .login-form h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #fff;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #ccc;
+      font-weight: 500;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px 16px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 8px;
+      color: #fff;
+      font-size: 14px;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #007bff;
+      box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px 24px;
+      background: linear-gradient(135deg, #007bff, #0056b3);
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0,123,255,0.3);
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .dashboard {
+      display: none;
+    }
+
+    .dashboard.active {
+      display: block;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: rgba(255,255,255,0.05);
+      padding: 24px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.1);
+      text-align: center;
+    }
+
+    .stat-card h3 {
+      font-size: 2rem;
+      color: #007bff;
+      margin-bottom: 8px;
+    }
+
+    .stat-card p {
+      color: #ccc;
+      font-size: 0.9rem;
+    }
+
+    .admin-sections {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+    }
+
+    .admin-section {
+      background: rgba(255,255,255,0.05);
+      padding: 24px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .admin-section h3 {
+      margin-bottom: 20px;
+      color: #fff;
+      border-bottom: 2px solid #007bff;
+      padding-bottom: 10px;
+    }
+
+    .admin-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .admin-actions .btn {
+      width: auto;
+      padding: 10px 20px;
+      font-size: 14px;
+    }
+
+    .logout-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(220,53,69,0.8);
+      padding: 8px 16px;
+      border: none;
+      border-radius: 6px;
+      color: #fff;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .logout-btn:hover {
+      background: rgba(220,53,69,1);
+    }
+
+    .error {
+      background: rgba(220,53,69,0.1);
+      border: 1px solid rgba(220,53,69,0.3);
+      color: #ff6b6b;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .success {
+      background: rgba(40,167,69,0.1);
+      border: 1px solid rgba(40,167,69,0.3);
+      color: #51cf66;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #ccc;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: #007bff;
+      animation: spin 1s ease-in-out infinite;
+      margin-right: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-container">
+    <!-- Login Form -->
+    <div class="login-form" id="login-form">
+      <h2>Admin Login</h2>
+      <div id="login-error" class="error" style="display: none;"></div>
+      
+      <form id="login-form-element">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" name="username" required autocomplete="username">
+        </div>
+        
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required autocomplete="current-password">
+        </div>
+        
+        <button type="submit" class="btn" id="login-btn">
+          <span id="login-text">Login</span>
+        </button>
+      </form>
+
+      <div style="margin-top: 20px; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 8px; font-size: 0.9rem; color: #ccc;">
+        <strong>Development Credentials:</strong><br>
+        Username: admin<br>
+        Password: admin123
+      </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div class="dashboard" id="dashboard">
+      <button class="logout-btn" id="logout-btn">Logout</button>
+      
+      <div class="admin-header">
+        <h1>Excess Music Admin Panel</h1>
+        <p>Manage artists, releases, and content</p>
+      </div>
+
+      <div id="dashboard-error" class="error" style="display: none;"></div>
+      <div id="dashboard-success" class="success" style="display: none;"></div>
+
+      <!-- Stats Overview -->
+      <div class="stats-grid" id="stats-grid">
+        <div class="loading">
+          <div class="spinner"></div>
+          Loading dashboard...
+        </div>
+      </div>
+
+      <!-- Admin Sections -->
+      <div class="admin-sections">
+        <div class="admin-section">
+          <h3>Artist Management</h3>
+          <div class="admin-actions">
+            <button class="btn" onclick="alert('Artist management coming soon!')">View All Artists</button>
+            <button class="btn" onclick="alert('Add artist form coming soon!')">Add New Artist</button>
+            <button class="btn" onclick="alert('Import feature coming soon!')">Import Artists</button>
+          </div>
+        </div>
+
+        <div class="admin-section">
+          <h3>Release Management</h3>
+          <div class="admin-actions">
+            <button class="btn" onclick="alert('Release management coming soon!')">View All Releases</button>
+            <button class="btn" onclick="alert('Add release form coming soon!')">Add New Release</button>
+            <button class="btn" onclick="alert('Bulk upload coming soon!')">Bulk Upload</button>
+          </div>
+        </div>
+
+        <div class="admin-section">
+          <h3>Content Management</h3>
+          <div class="admin-actions">
+            <button class="btn" onclick="alert('File manager coming soon!')">File Manager</button>
+            <button class="btn" onclick="alert('Settings panel coming soon!')">Site Settings</button>
+            <button class="btn" onclick="alert('Analytics coming soon!')">Analytics</button>
+          </div>
+        </div>
+
+        <div class="admin-section">
+          <h3>System</h3>
+          <div class="admin-actions">
+            <button class="btn" id="health-check-btn">Check System Health</button>
+            <button class="btn" onclick="alert('Backup feature coming soon!')">Backup Data</button>
+            <button class="btn" onclick="alert('Logs viewer coming soon!')">View Logs</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    class AdminPanel {
+      constructor() {
+        this.token = localStorage.getItem('admin_token');
+        this.apiURL = '/api';
+        this.init();
+      }
+
+      init() {
+        if (this.token) {
+          this.showDashboard();
+        } else {
+          this.showLogin();
+        }
+        
+        this.bindEvents();
+      }
+
+      bindEvents() {
+        // Login form
+        const loginForm = document.getElementById('login-form-element');
+        if (loginForm) {
+          loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            this.handleLogin();
+          });
+        }
+
+        // Logout button
+        const logoutBtn = document.getElementById('logout-btn');
+        if (logoutBtn) {
+          logoutBtn.addEventListener('click', () => {
+            this.handleLogout();
+          });
+        }
+
+        // Health check button
+        const healthCheckBtn = document.getElementById('health-check-btn');
+        if (healthCheckBtn) {
+          healthCheckBtn.addEventListener('click', () => {
+            this.checkSystemHealth();
+          });
+        }
+      }
+
+      async handleLogin() {
+        const loginBtn = document.getElementById('login-btn');
+        const loginText = document.getElementById('login-text');
+        const errorDiv = document.getElementById('login-error');
+        
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        loginBtn.disabled = true;
+        loginText.innerHTML = '<div class="spinner"></div>Logging in...';
+        errorDiv.style.display = 'none';
+
+        try {
+          const response = await fetch(`${this.apiURL}/admin/login`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username, password })
+          });
+
+          const data = await response.json();
+
+          if (data.success) {
+            this.token = data.data.token;
+            localStorage.setItem('admin_token', this.token);
+            this.showDashboard();
+          } else {
+            throw new Error(data.error || 'Login failed');
+          }
+
+        } catch (error) {
+          errorDiv.textContent = error.message;
+          errorDiv.style.display = 'block';
+        } finally {
+          loginBtn.disabled = false;
+          loginText.textContent = 'Login';
+        }
+      }
+
+      handleLogout() {
+        localStorage.removeItem('admin_token');
+        this.token = null;
+        this.showLogin();
+      }
+
+      showLogin() {
+        document.getElementById('login-form').style.display = 'block';
+        document.getElementById('dashboard').classList.remove('active');
+      }
+
+      async showDashboard() {
+        document.getElementById('login-form').style.display = 'none';
+        document.getElementById('dashboard').classList.add('active');
+        
+        await this.loadDashboardData();
+      }
+
+      async loadDashboardData() {
+        const statsGrid = document.getElementById('stats-grid');
+        
+        try {
+          const response = await fetch(`${this.apiURL}/admin/dashboard`, {
+            headers: {
+              'Authorization': `Bearer ${this.token}`
+            }
+          });
+
+          const data = await response.json();
+
+          if (data.success) {
+            this.renderStats(data.data.overview);
+          } else {
+            throw new Error(data.error || 'Failed to load dashboard');
+          }
+
+        } catch (error) {
+          console.error('Dashboard load error:', error);
+          statsGrid.innerHTML = `
+            <div class="stat-card">
+              <h3>⚠️</h3>
+              <p>Failed to load dashboard data</p>
+            </div>
+          `;
+        }
+      }
+
+      renderStats(stats) {
+        const statsGrid = document.getElementById('stats-grid');
+        
+        statsGrid.innerHTML = `
+          <div class="stat-card">
+            <h3>${stats.totalArtists || 0}</h3>
+            <p>Total Artists</p>
+          </div>
+          <div class="stat-card">
+            <h3>${stats.publishedReleases || 0}</h3>
+            <p>Published Releases</p>
+          </div>
+          <div class="stat-card">
+            <h3>${stats.totalPlays || 0}</h3>
+            <p>Total Plays</p>
+          </div>
+          <div class="stat-card">
+            <h3>${stats.featuredArtists || 0}</h3>
+            <p>Featured Artists</p>
+          </div>
+        `;
+      }
+
+      async checkSystemHealth() {
+        const btn = document.getElementById('health-check-btn');
+        const originalText = btn.textContent;
+        
+        btn.disabled = true;
+        btn.innerHTML = '<div class="spinner"></div>Checking...';
+
+        try {
+          const response = await fetch(`${this.apiURL}/health`);
+          const data = await response.json();
+
+          if (data.status === 'OK') {
+            this.showMessage('System is healthy! ✅', 'success');
+          } else {
+            throw new Error('System health check failed');
+          }
+
+        } catch (error) {
+          this.showMessage('System health check failed ❌', 'error');
+        } finally {
+          btn.disabled = false;
+          btn.textContent = originalText;
+        }
+      }
+
+      showMessage(message, type = 'success') {
+        const successDiv = document.getElementById('dashboard-success');
+        const errorDiv = document.getElementById('dashboard-error');
+        
+        if (type === 'success') {
+          successDiv.textContent = message;
+          successDiv.style.display = 'block';
+          errorDiv.style.display = 'none';
+          
+          setTimeout(() => {
+            successDiv.style.display = 'none';
+          }, 5000);
+        } else {
+          errorDiv.textContent = message;
+          errorDiv.style.display = 'block';
+          successDiv.style.display = 'none';
+        }
+      }
+    }
+
+    // Initialize admin panel
+    new AdminPanel();
+  </script>
+</body>
+</html>
