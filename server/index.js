@@ -46,7 +46,7 @@ app.use('/api/', limiter);
 // CORS configuration
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
-    ? ['https://your-domain.com'] 
+    ? (process.env.CORS_ORIGIN ? [process.env.CORS_ORIGIN] : ['https://your-domain.com'])
     : ['http://localhost:3001', 'http://127.0.0.1:3001'],
   credentials: true
 }));

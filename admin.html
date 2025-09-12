@@ -257,11 +257,17 @@
         </button>
       </form>
 
-      <div style="margin-top: 20px; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 8px; font-size: 0.9rem; color: #ccc;">
+      <div id="devInfo" style="margin-top: 20px; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 8px; font-size: 0.9rem; color: #ccc; display: none;">
         <strong>Development Credentials:</strong><br>
         Username: admin<br>
         Password: admin123
       </div>
+      <script>
+        // Only show development credentials in development mode
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+          document.getElementById('devInfo').style.display = 'block';
+        }
+      </script>
     </div>
 
     <!-- Dashboard -->
